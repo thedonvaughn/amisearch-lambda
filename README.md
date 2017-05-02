@@ -21,8 +21,6 @@
 
 Included is a cloudformation templates to create the lambda function and needed IAM role
 
-* The included Cloudformation template will create a stack with an Output value accessed by Export Key, `amiSearch-arn`.  The exported key provides the ARN value to the lambda function.  Use the Cloudformation intrinsic function "Fn::ImportValue" to import this value.
-
 * To create the cloudformation stack, first change to the `cfn/` directory
 
 ```
