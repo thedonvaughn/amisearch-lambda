@@ -1,9 +1,8 @@
-## AMISearch Lambda Function ##
+## AMISearch - AWS Lambda Function to search for AMI IDs ##
 
-* AMISearch Lambda Function to return latest AMI ID given AMI Name, Owner, VirtualizationType, and RootDeviceType properties.
+* AMISearch is an AWS Lambda Function to return latest AMI ID given an AMI Name, Owner, VirtualizationType, and RootDeviceType.
 * Python 3.6 runtime environment
-* AWS Lambda comes handy for an easy solution to obtain the latest AMI Id.
-* Use this lambda function with Cloudformation stacks when provisioning EC2 instances
+* AWS Lambda comes in handy for an easy solution to obtain the latest AMI Id when provisioning EC2 instances in Cloudformation.
 
 ### How-To Use ###
 
@@ -20,10 +19,11 @@
 
 #### Use CloudFormation to create the AMISearch Lambda Function ####
 
-* I've included a cloudformation stack to create the lambda function and needed IAM role for permissions
-* The included stack will create a CloudFormation an Output value with the Export Key `amiSearch-arn`.  The export key provides the ARN to the lambda function.  You can use the Cloudformation intrinsic function "Fn::ImportValue" to import this value.
+Included is a cloudformation templates to create the lambda function and needed IAM role
 
-* To create the stack, first change to the `cfn/` directory
+* The included Cloudformation template will create a stack with an Output value accessed by Export Key, `amiSearch-arn`.  The exported key provides the ARN value to the lambda function.  Use the Cloudformation intrinsic function "Fn::ImportValue" to import this value.
+
+* To create the cloudformation stack, first change to the `cfn/` directory
 
 ```
 cd cfn/
@@ -44,7 +44,7 @@ cd cfn/
 ]
 ```
 
-* Create the cloudformation stack however you wish.  Below is an example using `awscli`:
+* Create the cloudformation stack after updating `parameters.json`.  Below is an example using `awscli`:
 
 ```
 aws cloudformation create-stack --stack-name amiSearchStack --template-body file://amisearchstack.json --parameters file://parameters.json --capabilities CAPABILITY_IAM
@@ -52,7 +52,7 @@ aws cloudformation create-stack --stack-name amiSearchStack --template-body file
 
 #### Example Usage of AMISearch Lambda Function in Cloudformation ####
 
-* If you've used my provided cloudformation template to create the amisearch function, there will be an Export Key called `amiSearch-arn` which holds the value of the ARN for the lambda function.  Below is an example Cloudformation template that creates an EC2 instance using the AMISearch Lambda function to dynamically provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
+* If you've used my provided cloudformation template to create the amisearch lambda function, there will be an Export Key called `amiSearch-arn` which holds the value of the ARN for the lambda function.  Below is an example Cloudformation template that creates an EC2 instance.  The below example uses the AMISearch Lambda function to dynamically provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
 
 ```
    "AMISearch":{
@@ -70,11 +70,12 @@ aws cloudformation create-stack --stack-name amiSearchStack --template-body file
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "ImageId" : { "Fn::GetAtt" : ["AMISearch", "ImageId"] },
-			...
+			  "InstanceType": "t2.micro",
+      ...
 			...
 			...
 ```
 
-* Notice in the above example we create a "Custom::AMISearch" type.  We use "Fn::ImportValue" to provide the ARN to the AMISearch Lambda function for the "ServiceToken" property.   We have to specify "Name", "Owner", "Region", "VirtualizationType", and "RootDeviceType" Properties for the function to work.
+* Notice in the above example we create a "Custom" type which references our Lambda function by the `ServiceToken` Property.  For the `ServiceToken` property, use "Fn::ImportValue" to import the ARN value of the Lambda function.  The other properties we use to specify "Name", "Owner", "Region", "VirtualizationType", and "RootDeviceType" of the image.  All 5 Properties are required for the lambda function to work.
 
 * When we create the EC2 instance, "myInstance", we use { "Fn::GetAtt" : ["AMISearch", "ImageId"] } to provide the AMI ID that the Lambda function returned.
