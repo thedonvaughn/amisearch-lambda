@@ -1,15 +1,16 @@
-# AMISearch Lambda Function #
+## AMISearch Lambda Function ##
 
 * AMISearch Lambda Function to return latest AMI ID given AMI Name, Owner, VirtualizationType, and RootDeviceType properties.
 * Python 3.6 runtime environment
 * AWS Lambda comes handy for an easy solution to obtain the latest AMI Id.
 * Use this lambda function with Cloudformation stacks when provisioning EC2 instances
 
-## Setup ##
+### How-To Use ###
 
-### Create a zip archive of `amisearch.py` and `requests` module.  Upload the zip to S3 bucket ###
+#### Create a zip archive and upload to S3 bucket ####
 
-* I've included a script, `uploadtos3.sh`, that will create the `amisearch.zip` archive and upload to your S3 bucket.
+* `amisearch.py` requires the `requests` python module to be included in the zip archive.
+* I've included a script, `uploadtos3.sh`, That will create `amisearch.zip` with all dependencies included and upload it to your S3 bucket.
 
 * Usage: 
 
@@ -17,7 +18,7 @@
 ./scripts/uploadtos3.sh s3://my-bucket/lambda/amisearch.zip
 ```
 
-### Use CloudFormation to create the AMISearch Lambda Function ###
+#### Use CloudFormation to create the AMISearch Lambda Function ####
 
 * I've included a cloudformation stack to create the lambda function and needed IAM role for permissions
 * The included stack will create a CloudFormation an Output value with the Export Key `amiSearch-arn`.  The export key provides the ARN to the lambda function.  You can use the Cloudformation intrinsic function "Fn::ImportValue" to import this value.
@@ -49,7 +50,7 @@ cd cfn/
 aws cloudformation create-stack --stack-name amiSearchStack --template-body file://amisearchstack.json --parameters file://parameters.json --capabilities CAPABILITY_IAM
 ```
 
-### Example Usage of AMISearch Lambda Function in Cloudformation ###
+#### Example Usage of AMISearch Lambda Function in Cloudformation ####
 
 * If you've used my provided cloudformation template to create the amisearch function, there will be an Export Key called `amiSearch-arn` which holds the value of the ARN for the lambda function.  Below is an example Cloudformation template that creates an EC2 instance using the AMISearch Lambda function to dynamically provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
 
