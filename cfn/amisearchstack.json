@@ -1,0 +1,81 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Lambda AMI Search",
+    "Parameters": {
+        "S3Bucket": {
+            "Description": "S3 bucket containing the zipped lambda function",
+            "Type": "String"
+        },
+        "S3Key": {
+            "Description": "S3 bucket key of the zipped lambda function",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "AMISearchRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {"Service": [ "lambda.amazonaws.com" ]},
+                            "Action": [ "sts:AssumeRole"]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "root",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                               {
+    														"Sid": "CloudWatchLogsAccess",
+    														"Effect": "Allow",
+    														"Action": [
+      														"logs:*"
+      													],
+    														"Resource": "arn:aws:logs:*:*:*"
+   														},
+   														{
+    														"Sid": "DescribeImagesAccess",
+    														"Effect": "Allow",
+    														"Action": [
+                                  "ec2:DescribeImages"
+    														],
+    														"Resource": [
+      														"*"
+    														]
+   														}
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "AMISearchFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Description": "AMISearch via Lambda",
+                "Code": {
+                    "S3Bucket": {"Ref": "S3Bucket"},
+                    "S3Key": {"Ref": "S3Key"}
+                },
+                "Handler": "amisearch.lambda_handler",
+                "Runtime": "python3.6",
+                "Timeout": "10",
+                "Role": { "Fn::GetAtt": [ "AMISearchRole", "Arn"]}
+            }
+        }
+    },
+    "Outputs": {
+        "AMISearchArn": {
+            "Description": "AMISearch Lambda Function ARN",
+            "Value": { "Fn::GetAtt": [ "AMISearchFunction", "Arn"] },
+						"Export" : { "Name" : "amiSearch-arn" }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "StackId": "arn:aws:cloudformation:us-west-2:EXAMPLE/stack-name/guid",
+  "ResponseURL": "http://pre-signed-S3-url-for-response",
+  "ResourceProperties": {
+    "Name": "*ubuntu-zesty-daily-amd64-server-*",
+    "Owner": "099720109477",
+    "Region": "us-east-1",
+    "VirtualizationType": "hvm",
+    "RootDeviceType": "ebs"
+  },
+  "RequestType": "Create",
+  "ResourceType": "Custom::TestResource",
+  "RequestId": "unique id for this create request",
+  "LogicalResourceId": "MyTestResource"
+}

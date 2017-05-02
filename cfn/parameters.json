@@ -1,0 +1,10 @@
+[                                                                                                                                                     
+  {
+    "ParameterKey": "S3Bucket",
+    "ParameterValue": "my-bucket"
+  },
+  {
+    "ParameterKey": "S3Key",
+    "ParameterValue": "lambda/amisearch.zip"
+  }
+]
