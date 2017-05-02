@@ -52,7 +52,9 @@ aws cloudformation create-stack --stack-name amiSearchStack --template-body file
 
 #### Example Usage of AMISearch Lambda Function in Cloudformation ####
 
-* If you've used my provided cloudformation template to create the amisearch lambda function, there will be an Export Key called `amiSearch-arn` which holds the value of the ARN for the lambda function.  Below is an example Cloudformation template that creates an EC2 instance.  The below example uses the AMISearch Lambda function to dynamically provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
+  If my provided cloudformation template to create the lambda function was utilizied, there will be a Cloudformation Output/Export Key called `amiSearch-arn` which returns the value of the ARN for the lambda function.  
+  
+  Below is an example Cloudformation template that creates an EC2 instance.  The below example uses the the amisearch AWS Lambda function to provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
 
 ```
    "AMISearch":{
@@ -70,10 +72,10 @@ aws cloudformation create-stack --stack-name amiSearchStack --template-body file
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "ImageId" : { "Fn::GetAtt" : ["AMISearch", "ImageId"] },
-			  "InstanceType": "t2.micro",
-      ...
-			...
-			...
+        "InstanceType": "t2.micro",
+        ...
+        ...
+        ...
 ```
 
 * Notice in the above example we create a "Custom" type which references our Lambda function by the `ServiceToken` Property.  For the `ServiceToken` property, use "Fn::ImportValue" to import the ARN value of the Lambda function.  The other properties we use to specify "Name", "Owner", "Region", "VirtualizationType", and "RootDeviceType" of the image.  All 5 Properties are required for the lambda function to work.
