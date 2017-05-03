@@ -75,7 +75,7 @@
         "AMISearchArn": {
             "Description": "AMISearch Lambda Function ARN",
             "Value": { "Fn::GetAtt": [ "AMISearchFunction", "Arn"] },
-						"Export" : { "Name" : "amiSearch-arn" }
+            "Export" : { "Name" : "amiSearch-arn" }
         }
     }
 }
