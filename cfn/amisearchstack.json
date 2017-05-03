@@ -33,23 +33,23 @@
                             "Version": "2012-10-17",
                             "Statement": [
                                {
-    														"Sid": "CloudWatchLogsAccess",
-    														"Effect": "Allow",
-    														"Action": [
-      														"logs:*"
-      													],
-    														"Resource": "arn:aws:logs:*:*:*"
-   														},
-   														{
-    														"Sid": "DescribeImagesAccess",
-    														"Effect": "Allow",
-    														"Action": [
+                                "Sid": "CloudWatchLogsAccess",
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:*"
+                                  ],
+                                "Resource": "arn:aws:logs:*:*:*"
+                              },
+                              {
+                                "Sid": "DescribeImagesAccess",
+                                "Effect": "Allow",
+                                "Action": [
                                   "ec2:DescribeImages"
-    														],
-    														"Resource": [
-      														"*"
-    														]
-   														}
+                                 ],
+                                 "Resource": [
+                                  "*"
+                                 ]
+                             }
                             ]
                         }
                     }
