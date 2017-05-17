@@ -45,7 +45,7 @@ cd cfn/
 * Create the cloudformation stack after updating `parameters.json`.  Below is an example using `awscli`:
 
 ```
-aws cloudformation create-stack --stack-name amiSearchStack --template-body file://amisearchstack.json --parameters file://parameters.json --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name amiSearchStack --template-body file://cfn/ami-search.yaml --parameters file://cfn/parameters.json --capabilities CAPABILITY_IAM
 ```
 
 #### Example Usage of AMISearch Lambda Function in Cloudformation ####
