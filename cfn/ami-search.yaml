@@ -11,6 +11,7 @@ Resources:
   AMISearchRole:
     Type: 'AWS::IAM::Role'
     Properties:
+      RoleName: AMISearchRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:

@@ -45,14 +45,14 @@ cd cfn/
 * Create the cloudformation stack after updating `parameters.json`.  Below is an example using `awscli`:
 
 ```
-aws cloudformation create-stack --stack-name amiSearchStack --template-body file://cfn/ami-search.yaml --parameters file://cfn/parameters.json --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name amiSearchStack --template-body file://cfn/ami-search.yaml --parameters file://cfn/parameters.json --capabilities CAPABILITY_NAMED_IAM
 ```
 
 #### Example Usage of AMISearch Lambda Function in Cloudformation ####
 
   If my provided cloudformation template to create the lambda function was utilizied, there will be a Cloudformation Output/Export Key called `amiSearch-arn` which returns the value of the ARN for the lambda function.  
   
-  Below is an example Cloudformation template that creates an EC2 instance.  The below example uses the the amisearch AWS Lambda function to provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
+  Below is an example Cloudformation JSON template that creates an EC2 instance.  The below example uses the the amisearch AWS Lambda function to provide the latest AMI ID for Ubuntu Zesty with virtualization type of 'hvm' and root device type of 'ebs'.
 
 ```
    "AMISearch":{
@@ -79,3 +79,28 @@ aws cloudformation create-stack --stack-name amiSearchStack --template-body file
 * Notice in the above example we create a "Custom" type which references our Lambda function by the `ServiceToken` Property.  For the `ServiceToken` property, use "Fn::ImportValue" to import the ARN value of the Lambda function.  The other properties we use to specify "Name", "Owner", "Region", "VirtualizationType", and "RootDeviceType" of the image.  All 5 Properties are required for the lambda function to work.
 
 * When we create the EC2 instance, "myInstance", we use { "Fn::GetAtt" : ["AMISearch", "ImageId"] } to provide the AMI ID that the Lambda function returned.
+
+Below is an example Cloudformation YAML template that creates an EC2 instance using latest Amazon Linux 2017 AMI.
+
+```
+  AMISearch:
+    Type: 'Custom::AMISearch'
+    Properties:
+      ServiceToken: !ImportValue amiSearch-arn
+      Name: '*amzn-ami-hvm-2017*'
+      Owner: 137112412989
+      Region: us-east-1
+      VirtualizationType: hvm
+      RootDeviceType: ebs
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !GetAtt
+        - AMISearch
+        - ImageId
+      InstanceType: t2.micro
+  ...
+  ...
+  ...
+
+```
