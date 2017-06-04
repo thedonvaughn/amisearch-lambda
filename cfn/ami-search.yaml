@@ -42,6 +42,7 @@ Resources:
     Type: 'AWS::Lambda::Function'
     Properties:
       Description: AMISearch via Lambda
+      FunctionName: AMISearch
       Code:
         S3Bucket: !Ref S3Bucket
         S3Key: !Ref S3Key
